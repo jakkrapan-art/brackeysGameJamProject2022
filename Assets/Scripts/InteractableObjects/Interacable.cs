@@ -10,7 +10,7 @@ public class Interacable : MonoBehaviour
     protected SpriteRenderer sr;
     protected bool isPlayerInRange;
     protected Player player;
-
+    [SerializeField] protected bool isLocked;
     protected virtual void Start()
     {
         sr = GetComponent<SpriteRenderer>();
@@ -23,7 +23,7 @@ public class Interacable : MonoBehaviour
 
     public virtual void Interact()
     {
-        if (isPlayerInRange)
+        if (isPlayerInRange && !isLocked)
         {
             objectActions?.Invoke();
         }
@@ -50,7 +50,7 @@ public class Interacable : MonoBehaviour
 
     protected virtual void OnMouseOver()
     {
-        if (isPlayerInRange)
+        if (isPlayerInRange && !isLocked)
         {
             sr.color = Color.yellow;
         }
@@ -67,7 +67,7 @@ public class Interacable : MonoBehaviour
 
     protected virtual void OnMouseDown()
     {
-        if (isPlayerInRange)
+        if (isPlayerInRange && !isLocked)
         {
             Interact();
         }
