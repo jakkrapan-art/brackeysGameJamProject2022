@@ -31,4 +31,9 @@ public class Inventory : MonoBehaviour
     {
         items[index].ShowDetail();
     }
+
+    public void InsertItemToInteractableObject(ItemRequireInteracable targetObject, Item itemToInsert)
+    {
+        targetObject.InsertItem(itemToInsert);
+    }
 }
