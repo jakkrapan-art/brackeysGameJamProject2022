@@ -14,14 +14,18 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     private Animator animator;
 
+    private bool canMove;
     private float facingDirection; // < 0 = Left, > 0 = Right.
-    //private Inventory playerInventory; 
+    public Inventory playerInventory { get; private set; }
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 
+        playerInventory = GetComponent<Inventory>();
+
+        canMove = true;
         facingDirection = transform.localScale.x / transform.localScale.x;
     }
 
@@ -32,24 +36,21 @@ public class Player : MonoBehaviour
         Move();
     }
 
-
-    private void FixedUpdate()
-    {
-
-    }
-
     private void CheckMoveInput()
     {
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         float verticalInput = Input.GetAxisRaw("Vertical");
 
-        if (facingDirection > 0 && horizontalInput < 0)
+        if (canMove)
         {
-            Flip();
-        }
-        else if (facingDirection < 0 && horizontalInput > 0)
-        {
-            Flip();
+            if (facingDirection > 0 && horizontalInput < 0)
+            {
+                Flip();
+            }
+            else if (facingDirection < 0 && horizontalInput > 0)
+            {
+                Flip();
+            }
         }
 
         moveInput.Set(horizontalInput, verticalInput);
@@ -57,7 +58,8 @@ public class Player : MonoBehaviour
 
     private void UpdatePlayerAnimation()
     {
-        if (moveInput.magnitude != 0)
+
+        if (moveInput.magnitude != 0 && canMove)
         {
             animator.SetBool("isWalking", true);
         }
@@ -69,8 +71,22 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
-        playerVelocity.Set(moveInput.x * moveSpeed, moveInput.y * moveSpeed);
-        rb.velocity = playerVelocity;
+        if (canMove)
+        {
+            playerVelocity.Set(moveInput.x * moveSpeed, moveInput.y * moveSpeed);
+            rb.velocity = playerVelocity;
+        }
+    }
+
+    public void EnableMove()
+    {
+        canMove = true;
+    }
+
+    public void DisableMove()
+    {
+        rb.velocity = Vector2.zero;
+        canMove = false;
     }
 
     private void Flip()
