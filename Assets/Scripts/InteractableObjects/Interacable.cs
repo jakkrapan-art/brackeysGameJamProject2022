@@ -5,32 +5,31 @@ using UnityEngine.Events;
 
 public class Interacable : MonoBehaviour
 {
-    [SerializeField] private UnityEvent objectActions;
-    [SerializeField] private float playerCheckRadius;
-    private SpriteRenderer sr;
-    private bool isPlayerInRange;
-    private Player player;
+    [SerializeField] protected UnityAction objectActions;
+    [SerializeField] protected float playerCheckRadius;
+    protected SpriteRenderer sr;
+    protected bool isPlayerInRange;
+    protected Player player;
 
-    private void Start()
+    protected virtual void Start()
     {
         sr = GetComponent<SpriteRenderer>();
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         CheckPlayerInRange();
     }
 
-    public void Interact()
+    public virtual void Interact()
     {
         if (isPlayerInRange)
         {
-            //objectActions.Invoke();
-            Debug.Log("Interact!");
+            objectActions?.Invoke();
         }
     }
 
-    private void CheckPlayerInRange()
+    protected virtual void CheckPlayerInRange()
     {
         RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, playerCheckRadius, transform.up);
 
@@ -49,7 +48,7 @@ public class Interacable : MonoBehaviour
         player = null;
     }
 
-    private void OnMouseOver()
+    protected virtual void OnMouseOver()
     {
         if (isPlayerInRange)
         {
@@ -61,12 +60,12 @@ public class Interacable : MonoBehaviour
         }
     }
 
-    private void OnMouseExit()
+    protected virtual void OnMouseExit()
     {
         sr.color = Color.white;
     }
 
-    private void OnMouseDown()
+    protected virtual void OnMouseDown()
     {
         if (isPlayerInRange)
         {
@@ -74,7 +73,7 @@ public class Interacable : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
+    protected virtual void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, playerCheckRadius);
